@@ -1,4 +1,4 @@
-import reflex as rx
+import reflex as rx 
 from .nav import navbar
 def base_page(child: rx.Component, *args, **kwargs)->rx.Component:
     return rx.fragment(
