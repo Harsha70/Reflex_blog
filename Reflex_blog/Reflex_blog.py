@@ -6,7 +6,7 @@ from rxconfig import config
 
 from .ui.base import base_page
 # from pages.about import about_page
-from . import pages
+from . import navigations, pages
 
 class State(rx.State):
     """The app state."""
@@ -45,6 +45,6 @@ def index() -> rx.Component:
 
 app = rx.App()
 app.add_page(index)
-app.add_page(pages.about_page, route='/about')
-app.add_page(pages.pricing_page, route='/pricing')
+app.add_page(pages.about_page, route=navigations.routes.ABOUT_US_ROUTE)
+app.add_page(pages.pricing_page, route=navigations.routes.PRICING_ROUTE)
 # app.add_page(pages.about_page, route='/about')
