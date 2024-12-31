@@ -6,7 +6,7 @@ from rxconfig import config
 
 from .ui.base import base_page
 # from pages.about import about_page
-from . import navigations, pages, contact
+from . import navigations, pages, contact, blog
 
 class State(rx.State):
     """The app state."""
@@ -52,4 +52,10 @@ app.add_page(
     contact.contact_entries_list_page, 
     route=navigations.routes.CONTACT_ENTRIES_ROUTE,
     on_load=contact.ContactState.list_entries
+    )
+
+app.add_page(
+    blog.blog_post_list_page, 
+    route=navigations.routes.BLOG_POSTS_ROUTE,
+    on_load=blog.BlogPostState.load_posts
     )
