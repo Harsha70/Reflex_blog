@@ -4,3 +4,5 @@ assets/external/
 *.db
 __pycache__/
 venv/
+alembic/
+alembic.ini
