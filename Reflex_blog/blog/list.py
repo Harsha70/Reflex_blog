@@ -29,6 +29,10 @@ def blog_post_list_page() -> rx.Component:
     return base_page(
         rx.vstack(
             rx.heading("Blog Posts", size = "5"),
+            rx.link(
+                rx.button('New Post'),
+                href = navigations.routes.BLOG_POSTS_ADD_ROUTE
+            ),
             # rx.foreach(["abc", "def"], foreach_callback),
             rx.foreach(state.BlogPostState.posts, blog_post_list_item),
             spacing = "5",

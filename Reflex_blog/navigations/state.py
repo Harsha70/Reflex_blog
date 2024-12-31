@@ -18,3 +18,9 @@ class NavState(rx.State):
     
     def to_blog(self):
         return rx.redirect(routes.BLOG_POSTS_ROUTE)
+    
+    def to_blog_add(self):
+        return rx.redirect(routes.BLOG_POSTS_ADD_ROUTE)
+    
+    def to_blog_create(self):
+        return self.to_blog_add()
