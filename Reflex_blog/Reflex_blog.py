@@ -48,3 +48,8 @@ app.add_page(index)
 app.add_page(pages.about_page, route=navigations.routes.ABOUT_US_ROUTE)
 app.add_page(pages.pricing_page, route=navigations.routes.PRICING_ROUTE)
 app.add_page(contact.contact_page, route=navigations.routes.CONTACT_US_ROUTE)
+app.add_page(
+    contact.contact_entries_list_page, 
+    route=navigations.routes.CONTACT_ENTRIES_ROUTE,
+    on_load=contact.ContactState.list_entries
+    )
