@@ -7,6 +7,7 @@ from sqlmodel import select
 class BlogPostState(rx.State):
     posts: List['BlogPostModel'] = []
     post: Optional['BlogPostModel'] = None
+    post_content: str = ""
 
     @rx.var
     def blog_post_id(self)->str:
@@ -21,6 +22,8 @@ class BlogPostState(rx.State):
                 select(BlogPostModel).where(BlogPostModel.id == self.blog_post_id)
             ).one_or_none()
             self.post = result
+            self.post_content = self.post.content
+            
     def load_posts(self):
         with rx.session() as session:
             result = session.exec(
@@ -37,13 +40,36 @@ class BlogPostState(rx.State):
             session.refresh(post)
             # print("added",post)
             self.post = post
+
     # def get_post(self, post_id):
     #     with rx.session() as session:
     #         result = session.exec(
     #             select(BlogPostModel)
     #         )
-    #         self.posts = result
+    #         self.posts = result 
 
+    def edit_post(self, post_id:int, updated_data: dict):
+        
+        with rx.session() as session:
+            post = session.exec(
+                select(BlogPostModel).where(BlogPostModel.id == post_id)
+            ).one_or_none()
+            if post is None:
+                return
+            for key, value in updated_data.items():
+                setattr(post, key, value)
+                
+            session.add(post)
+            session.commit()
+            session.refresh(post)
+            
+            # post = BlogPostModel(**form_data)
+            # # print("adding",post)
+            # session.add(post)
+            # session.commit()
+            # session.refresh(post)
+            # # print("added",post)
+            # self.post = post
 
 class BlogAddPostFormState(BlogPostState):
     form_data: dict = {}
@@ -52,6 +78,18 @@ class BlogAddPostFormState(BlogPostState):
         self.form_data = form_data
         self.add_post(form_data)
         # redirect
+        
+class BlogEditPostFormState(BlogPostState):
+    form_data: dict = {}
+    # content: str = ''
+
+    def handle_submit(self, form_data):
+        self.form_data = form_data
+        post_id = form_data.pop('post_id')
+        updated_data = {**form_data}
+        self.edit_post(post_id, updated_data)
+        # redirect
+        # print(post_id, updated_data)
 
 
 
