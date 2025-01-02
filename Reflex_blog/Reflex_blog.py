@@ -63,6 +63,9 @@ app.add_page(auth.pages.my_signup_page,
 app.add_page(pages.about_page, route=navigations.routes.ABOUT_US_ROUTE)
 app.add_page(pages.pricing_page, route=navigations.routes.PRICING_ROUTE)
 app.add_page(contact.contact_page, route=navigations.routes.CONTACT_US_ROUTE)
+
+app.add_page(pages.protected_page, route='/protected', on_load=auth.SessionState.on_load)
+
 app.add_page(
     contact.contact_entries_list_page, 
     route=navigations.routes.CONTACT_ENTRIES_ROUTE,
