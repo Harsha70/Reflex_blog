@@ -7,7 +7,12 @@ from rxconfig import config
 
 from .ui.base import base_page
 # from pages.about import about_page
-from . import auth, navigations, pages, contact, blog
+
+from .auth.pages import (my_login_page, my_signup_page, my_logout_page)
+
+from .auth.state import SessionState
+
+from . import  navigations, pages, contact, blog
 
 class State(rx.State):
     """The app state."""
@@ -17,11 +22,12 @@ class State(rx.State):
 
 def index() -> rx.Component:
     # Welcome Page (Index)
+    my_user_obj = SessionState.authenticated_user_info
     return base_page(
-        # rx.container(
-        
         # rx.color_mode.button(position="top-right"),
         rx.vstack(
+            rx.text(my_user_obj.to_string()), 
+            # rx.text(my_user_obj.user.to_string()), 
             rx.heading("Welcome to Reflex!", size="9"),
             rx.text(
                 "Get started by editing ",
@@ -42,29 +48,27 @@ def index() -> rx.Component:
     # )
     )
     
-
-
 app = rx.App()
 app.add_page(index)
 #
 
-app.add_page(auth.pages.my_login_page,
+app.add_page(my_login_page,
              route=reflex_local_auth.routes.LOGIN_ROUTE,
              title='Login')
 
-app.add_page(auth.pages.my_signup_page,
+app.add_page(my_signup_page,
              route=reflex_local_auth.routes.REGISTER_ROUTE,
              title='Register')
 
-# app.add_page(reflex_local_auth.pages.register_page,
-#              route=reflex_local_auth.routes.REGISTER_ROUTE,
-#              title='Register')
+app.add_page(my_logout_page,
+             route=navigations.routes.LOGOUT_ROUTE,
+             title='Logout')
 
 app.add_page(pages.about_page, route=navigations.routes.ABOUT_US_ROUTE)
 app.add_page(pages.pricing_page, route=navigations.routes.PRICING_ROUTE)
 app.add_page(contact.contact_page, route=navigations.routes.CONTACT_US_ROUTE)
 
-app.add_page(pages.protected_page, route='/protected', on_load=auth.SessionState.on_load)
+app.add_page(pages.protected_page, route='/protected', on_load=SessionState.on_load)
 
 app.add_page(
     contact.contact_entries_list_page, 

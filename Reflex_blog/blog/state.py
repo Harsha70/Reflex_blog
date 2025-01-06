@@ -2,10 +2,12 @@ from datetime import datetime
 from typing import List, Optional
 import reflex as rx
 
-from .model import BlogPostModel
+# from .model_copy import BlogPostModel
+from ..model import BlogPostModel
 from sqlmodel import select
+from ..auth.state import SessionState
 
-class BlogPostState(rx.State):
+class BlogPostState(SessionState):
     posts: List['BlogPostModel'] = []
     post: Optional['BlogPostModel'] = None
     post_content: str = ""
@@ -23,6 +25,8 @@ class BlogPostState(rx.State):
             result = session.exec(
                 select(BlogPostModel).where(BlogPostModel.id == self.blog_post_id)
             ).one_or_none()
+            if result.userinfo: # db lookup
+                result.userinfo.user # db lookup
             self.post = result
             if result is None:
                 self.post_content = ""
@@ -31,6 +35,7 @@ class BlogPostState(rx.State):
             self.post_publish_active = self.post.publish_active
             
     def load_posts(self):
+        
         with rx.session() as session:
             result = session.exec(
                 select(BlogPostModel).where(BlogPostModel.publish_active==True)
@@ -79,8 +84,12 @@ class BlogAddPostFormState(BlogPostState):
     form_data: dict = {}
 
     def handle_submit(self, form_data):
-        self.form_data = form_data
-        self.add_post(form_data)
+        data = form_data.copy()
+        print(self.my_userinfo_id)
+        if self.my_userinfo_id is not None:
+            data['userinfo_id'] = self.my_userinfo_id
+        self.form_data = data
+        self.add_post(data)
         return self.to_blog_post()
         # redirect
         

@@ -1,4 +1,31 @@
 import reflex as rx
+from .. import navigations
+
+from ..auth.state import SessionState
+
+def sidebar_logout_item() -> rx.Component:
+    return rx.box(
+        rx.hstack(
+            rx.icon('log-out'),
+            rx.text("Logout", size="4"),
+            width="100%",
+            padding_x="0.5rem",
+            padding_y="0.75rem",
+            align="center",
+            style={
+                "_hover": {
+                    "bg": rx.color("accent", 4),
+                    "color": rx.color("accent", 11),
+                },
+                "border-radius": "0.5em",
+            },
+        ),
+        on_click = navigations.NavState.to_logout,
+        as_ = 'button',
+        underline = 'none',
+        weight="medium",
+        width="100%",
+    )
 
 def sidebar_item(
     text: str, icon: str, href: str
@@ -26,16 +53,58 @@ def sidebar_item(
     )
 
 
+
+
 def sidebar_items() -> rx.Component:
     return rx.vstack(
-        sidebar_item("Dashboard", "layout-dashboard", "/#"),
-        sidebar_item("Projects", "square-library", "/#"),
-        sidebar_item("Analytics", "bar-chart-4", "/#"),
-        sidebar_item("Messages", "mail", "/#"),
+        sidebar_item("Dashboard", "layout-dashboard", navigations.routes.HOME_ROUTE),
+        sidebar_item("Blog", "square-library", navigations.routes.BLOG_POSTS_ROUTE),
+        sidebar_item("Create Post", "square-library", navigations.routes.BLOG_POSTS_ADD_ROUTE),
+        sidebar_item("Contact", "square-library", navigations.routes.CONTACT_US_ROUTE),
+        sidebar_item("Contact History", "square-library", navigations.routes.CONTACT_ENTRIES_ROUTE),
+        # sidebar_item("Blog", "square-library", navigation.routes.BLOG_POST_ADD_ROUTE),
         spacing="1",
         width="100%",
     )
 
+def sidebar_user_item() -> rx.Component:
+    auth_user_info_obj = SessionState.authenticated_user_info
+    # auth_user_obj = rx.cond(auth_user_info_obj & auth_user_info_obj.user, auth_user_info_obj.user.username, "Account")
+    auth_user_obj = rx.cond(SessionState.is_authenticated, SessionState.authenticated_user.username, "Account")
+    
+    return rx.cond(auth_user_info_obj,
+            rx.hstack(
+            rx.icon_button(
+                rx.icon("user"),
+                size="3",
+                radius="full",
+            ),
+            rx.vstack(
+                rx.box(
+                    rx.text(
+                        auth_user_obj,
+                        size="3",
+                        weight="bold",
+                    ),
+                    rx.text(
+                        auth_user_info_obj.email,
+                        size="2",
+                        weight="medium",
+                    ),
+                    width="100%",
+                ),
+                spacing="0",
+                align="start",
+                justify="start",
+                width="100%",
+            ),
+            padding_x="0.5rem",
+            align="center",
+            justify="start",
+            width="100%",
+        ),
+        rx.fragment("")
+        )
 
 def sidebar() -> rx.Component:
     return rx.box(
@@ -63,43 +132,12 @@ def sidebar() -> rx.Component:
                         sidebar_item(
                             "Settings", "settings", "/#"
                         ),
-                        sidebar_item(
-                            "Log out", "log-out", "/#"
-                        ),
+                        sidebar_logout_item(),
                         spacing="1",
                         width="100%",
                     ),
                     rx.divider(),
-                    rx.hstack(
-                        rx.icon_button(
-                            rx.icon("user"),
-                            size="3",
-                            radius="full",
-                        ),
-                        rx.vstack(
-                            rx.box(
-                                rx.text(
-                                    "My account",
-                                    size="3",
-                                    weight="bold",
-                                ),
-                                rx.text(
-                                    "user@reflex.dev",
-                                    size="2",
-                                    weight="medium",
-                                ),
-                                width="100%",
-                            ),
-                            spacing="0",
-                            align="start",
-                            justify="start",
-                            width="100%",
-                        ),
-                        padding_x="0.5rem",
-                        align="center",
-                        justify="start",
-                        width="100%",
-                    ),
+                    sidebar_user_item(),
                     width="100%",
                     spacing="5",
                 ),
@@ -113,7 +151,7 @@ def sidebar() -> rx.Component:
                 bg=rx.color("accent", 3),
                 align="start",
                 # height="100%",
-                height="650px",
+                height="100vh",
                 width="16em",
             ),
         ),
@@ -136,49 +174,12 @@ def sidebar() -> rx.Component:
                             rx.spacer(),
                             rx.vstack(
                                 rx.vstack(
-                                    sidebar_item(
-                                        "Settings",
-                                        "settings",
-                                        "/#",
-                                    ),
-                                    sidebar_item(
-                                        "Log out",
-                                        "log-out",
-                                        "/#",
-                                    ),
+                                    sidebar_logout_item(),
                                     width="100%",
                                     spacing="1",
                                 ),
                                 rx.divider(margin="0"),
-                                rx.hstack(
-                                    rx.icon_button(
-                                        rx.icon("user"),
-                                        size="3",
-                                        radius="full",
-                                    ),
-                                    rx.vstack(
-                                        rx.box(
-                                            rx.text(
-                                                "My account",
-                                                size="3",
-                                                weight="bold",
-                                            ),
-                                            rx.text(
-                                                "user@reflex.dev",
-                                                size="2",
-                                                weight="medium",
-                                            ),
-                                            width="100%",
-                                        ),
-                                        spacing="0",
-                                        justify="start",
-                                        width="100%",
-                                    ),
-                                    padding_x="0.5rem",
-                                    align="center",
-                                    justify="start",
-                                    width="100%",
-                                ),
+                                sidebar_user_item(),
                                 width="100%",
                                 spacing="5",
                             ),

@@ -14,6 +14,10 @@ def blog_post_detail_page() -> rx.Component:
     )
     my_child = rx.vstack(
         rx.heading(state.BlogPostState.post.title, size = "9"),
+        rx.text("user info id: ",state.BlogPostState.post.userinfo_id),
+        rx.text("post :",state.BlogPostState.post.to_string()),
+        rx.text("user info: ",state.BlogPostState.post.userinfo.to_string()),
+        rx.text("user: ",state.BlogPostState.post.userinfo.user.to_string()),
         rx.text(state.BlogPostState.post.publish_date),
         edit_link_el,
         # rx.text(state.BlogPostState.blog_post_id),

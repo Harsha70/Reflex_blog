@@ -3,10 +3,15 @@ import reflex as rx
 from .sidebar import sidebar
 def base_dashboard_page(child: rx.Component, *args, **kwargs)->rx.Component:
     return rx.fragment(
+        rx.hstack(
         sidebar(),
-        rx.box(child, id = 'my_box_base_container'),
-        rx.logo(),
-        rx.color_mode.button(position="bottom-left"),
-        id = 'my_base_container'
+        rx.box(child, 
+               rx.logo(), 
+               padding = '1em',
+               width = '100%',
+               id = 'my_box_base_container'),
+        ),
+        rx.color_mode.button(position="bottom-right"),
+        # id = 'my_base_container'
     )
     

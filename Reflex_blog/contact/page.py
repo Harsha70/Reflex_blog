@@ -3,13 +3,14 @@ import reflex as rx
 from ..ui.base import base_page
 
 # from .. import contact
-from . import form, state, model
-
+from . import form, state
+from .. import model
 
 def contact_entry_list_item(contact: model.ContactEntryModel):
     return rx.box(
         rx.heading(contact.first_name),
         rx.text(contact.message),
+        rx.cond(contact.user_id, rx.text("user_id: ", contact.user_id), rx.fragment("")),
         padding='1em'
     )
 

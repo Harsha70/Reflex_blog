@@ -1,8 +1,19 @@
 import reflex as rx
 from .state import ContactState
+from ..auth.state import SessionState
 
 def contact_form() -> rx.Component:
+    user_id = SessionState.my_user_id
     return rx.form(
+        rx.cond(user_id,
+                rx.box(
+                    rx.input(
+                        type="hidden",
+                        name="user_id",
+                        value=user_id,
+                    ), display="none"),
+                    rx.fragment(""),
+        ),
             rx.vstack(
                 rx.hstack(
                     rx.input(

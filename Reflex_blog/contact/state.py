@@ -2,9 +2,10 @@ import reflex as rx
 import asyncio
 from typing import List
 from sqlmodel import select
-from .model import ContactEntryModel
+from ..model import ContactEntryModel
+from ..auth.state import SessionState
 
-class ContactState(rx.State):
+class ContactState(SessionState):
     form_data: dict = {}
     entries: List['ContactEntryModel'] = []
     did_submit: bool = False
@@ -29,6 +30,10 @@ class ContactState(rx.State):
                 continue
             data[k] = v
         
+        if self.my_userinfo_id is not None:
+            data['userinfo_id'] = self.my_userinfo_id
+        
+        print('contact state', data)
         with rx.session() as session:
             df_entry = ContactEntryModel(
                 **data

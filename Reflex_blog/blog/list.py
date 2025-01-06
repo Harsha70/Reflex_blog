@@ -2,7 +2,9 @@ import reflex as rx
 
 from ..ui.base import base_page
 from .. import navigations
-from . import  state, model
+# from . import  model_copy, state
+from .. import  model 
+from . import state
 
 
 def blog_post_detail_link(child: rx.Component, post: model.BlogPostModel):

@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from .. import utils
 import sqlalchemy
 
-    
+
 class ContactEntryModel(rx.Model, table=True):
     user_id : int | None=None
     first_name: str
